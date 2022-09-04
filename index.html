@@ -1,0 +1,102 @@
+<head>
+    <link rel="stylesheet" href="shoecycle.css">
+</head>
+<body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@16.12.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16.12.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.8.3/babel.js"></script>
+    <script type="text/babel">
+      const rootElement = document.getElementById('root')
+
+      function log(value: String) {
+        console.log(value)
+      }
+
+      function localeDate() {
+        const options = { year: 'numeric', month: 'numeric', day: 'numeric' }
+        let today = new Date()
+        return today.toLocaleDateString(options)
+      }
+
+      function App() {
+        const [totalDistance, setTotalDistance] = React.useState(
+            () => {
+                log("Get totalDistance");
+                return window.localStorage.getItem('totalDistance') || 0
+            }
+        )
+
+        const [distance, setDistance] = React.useState(
+            () => {
+                log("Get distance")
+                return window.localStorage.getItem('distance') || 0
+            }
+        )
+
+        const [runDate, setRunDate] = React.useState(window.localStorage.getItem('runDate') || localeDate())
+
+        const handleAddDistanceClick = event => {
+            log("Set totalDistance")
+            let _totalDistance = Number(totalDistance) + Number(distance)
+            setTotalDistance(_totalDistance)
+        }
+
+        React.useEffect(() => {
+            log("Store totalDistance")
+            window.localStorage.setItem('totalDistance', totalDistance)
+        }, [totalDistance])
+
+        React.useEffect(() => {
+            log("Store distance")
+            let _distance = distance < 0 ? 0 : distance
+            window.localStorage.setItem('distance', _distance)
+        }, [distance])
+
+        React.useEffect(() => {
+            log("Store runDate")
+            window.localStorage.setItem('runDate', runDate)
+        })
+
+        const handleDistanceChange = event => {
+            setDistance(event.target.value)
+        }
+
+        const handleRunDateChange = event => {
+            setRunDate(event.target.value)
+        }
+        
+
+        return (
+        <>
+        <div className = "header">
+            <img src = "logo.png" alt = "ShoeCycle Logo" width = "100" height = "100"/> <span>ShoeCycle</span>
+        </div>
+        <div className = "runStuff">
+            <p>
+            <label htmlFor="distance">Distance: </label>
+            <span><input type="number" id="distance" name="distance" value={distance} style={{width: "50px"}} onChange={handleDistanceChange}/> </span>
+            <span><button onClick={handleAddDistanceClick}>Add</button></span>
+            </p>
+            <p>
+                <label htmlFor="runDate">Date: </label>
+                <span><input type="date" id="runDate" name="runDate" value={runDate} onChange={handleRunDateChange} /></span>
+            </p>
+            <p>
+            <label>Total Distance: {totalDistance}</label>
+            </p>
+        </div>
+        </>
+        )
+      }
+
+      function renderApp() {
+        log('Render App')
+        ReactDOM.render(<App />, rootElement)
+      }
+
+      renderApp()
+    //   ReactDOM.render(element3, rootElement)
+    </script>
+  </body>
+  <!-- WGyx8eSde#VnjGRBC6D6#Ue!T -->
